@@ -41,7 +41,13 @@ function async(func)
     end
 end
 
+-- promise can also be an async function, so that you can use 'await(xxx)(...)' as well as 'await(xxx(...))'
 function await(promise)
+    if type(promise) == 'function' then
+        return function(...)
+            return await(promise(...))
+        end
+    end
     local co, result
     promise:next(
         function(...)
